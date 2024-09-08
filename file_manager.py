@@ -21,13 +21,12 @@ class FileManager:
                 gui.txt_content.insert(END, self.content)
                 gui.window.title(self.build_label(gui.title))
             except IOError as e:
-                messagebox.showerror('Error', f'Failed to open file: {e}')
+                self.show_saving_error(e)
         else:
             messagebox.showinfo('Info', 'File not selected')
 
     def open_file_in_browser(self, gui):
         self.save_file(gui)
-        #webbrowser.open('file://' + os.path.realpath('C:\\Users\\panan\\OneDrive\\Desktop\\index.html'))
         webbrowser.open(f'file://{self.path}')
 
     def save_file(self, gui):
@@ -36,7 +35,7 @@ class FileManager:
                 open(self.path, 'w').write(gui.txt_content.get(1.0, END))
                 gui.window.title(self.build_label(gui.title))
             except IOError as e:
-                messagebox.showerror('Error', f'Failed to save file: {e}')
+                self.show_saving_error(e)
         else:
             self.save_as_file(gui)
 
@@ -48,7 +47,10 @@ class FileManager:
                 self.path = path
                 gui.window.title(self.build_label(gui.title))
             except IOError as e:
-                messagebox.showerror('Error', f'Failed to save file: {e}')
-                
+                self.show_saving_error(e)
     def build_label(self, default_label):
-        return f'{default_label} | {os.path.basename(self.path)} --- {os.path.getsize(self.path)} bytes'
+        return f'{default_label} | {os.path.basename(self.path)} / {os.path.getsize(self.path)} B'
+
+    def show_saving_error(self, e):
+        messagebox.showerror('Error', f'Failed to save file: {e}')
+
